@@ -6,6 +6,7 @@ import (
 	//"golang.org/x/tour/pic"
 	"math"
 	"strings"
+	"time"
 )
 
 type Vertex struct {
@@ -94,6 +95,7 @@ func (v *Vertex) Scale(f int) {
 	v.Y = v.Y * f
 }
 
+// Pour les interfaces
 type Abser interface {
 	Abs() float64
 }
@@ -103,8 +105,27 @@ type Person struct {
 	Age  int
 }
 
+// Interface stringer
 func (p Person) String() string {
 	return fmt.Sprintf("%v (%v years)", p.Name, p.Age)
+}
+
+// Pour les errors.
+type MyError struct {
+	When time.Time
+	What string
+}
+
+func (e *MyError) Error() string { // Fonction repondant à l'interface Error
+	return fmt.Sprintf("at %v, %s",
+		e.When, e.What)
+}
+
+func run() error {
+	return &MyError{
+		time.Now(),
+		"it didn't work",
+	}
 }
 
 func main() {
@@ -306,5 +327,14 @@ func main() {
 	fmt.Println(p1, p2)
 
 	// ¤¤ Errors ¤¤
+	// Les errors sont des interfaces :
+	//type error interface {
+	//Error() string
+	//}
+
+	err := run()
+	if err != nil {
+		fmt.Println(err)
+	}
 
 }
