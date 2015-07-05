@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	//"golang.org/x/tour/pic"
+	"io"
 	"math"
 	"strings"
 	"time"
@@ -335,6 +336,24 @@ func main() {
 	err := run()
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	// ¤¤ Reader ¤¤
+	// Interface pour la lecture de stream, texte, fichiers ...
+	//func (T) Read(b []byte) (n int, err error)
+	// Rmplit le tableau en entree et retourne le nombre de byte ecrit
+	// et EOF si la fin du stream.
+	r := strings.NewReader("Hello, Reader!")
+
+	taby := make([]byte, 10)
+
+	for {
+		n, err := r.Read(taby)
+		fmt.Printf("n = %v err = %v taby = %v\n", n, err, taby)
+		fmt.Printf("taby[:n] = %q\n", taby[:n])
+		if err == io.EOF {
+			break
+		}
 	}
 
 }
