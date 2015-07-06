@@ -4,8 +4,11 @@ package main
 import (
 	"fmt"
 	//"golang.org/x/tour/pic"
+	"image"
 	"io"
+	"log"
 	"math"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -127,6 +130,37 @@ func run() error {
 		time.Now(),
 		"it didn't work",
 	}
+}
+
+// Pour http
+// Implémentation de l'interface handler
+/*
+package http
+
+type Handler interface {
+    ServeHTTP(w ResponseWriter, r *Request)
+}
+*/
+type Hello struct{}
+
+func (h Hello) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello!", *r)
+}
+
+type String string
+
+type Struct struct {
+	Greeting string
+	Punct    string
+	Who      string
+}
+
+func (s String) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, s)
+}
+
+func (s Struct) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, s.Greeting, s.Punct, s.Who)
 }
 
 func main() {
@@ -355,5 +389,39 @@ func main() {
 			break
 		}
 	}
+	// exemple
+	// Implement a Reader type that emits an infinite stream of the ASCII character 'A'.
+	/*
+		func (mr MyReader) Read(tab []byte) (int, error){
+		index := 0
+		for ; index < len(tab) ; index ++{
+			tab[index] = 'A'
+		}
+		return index, nil
+	*/
+
+	// ¤¤ Web Server ¤¤
+	// http://golang.org/pkg/net/http/
+	// Dans le package net/http interface Handler pour traiter les requette http.
+	// Voir plus haut pour l'implémentation de Hello
+	//var h Hello
+	var errHTTP error = nil
+	//errHTTP = http.ListenAndServe("localhost:4000", h) // Lance server
+	if errHTTP != nil {
+		log.Fatal(err)
+	}
+
+	// Pour exercice
+	//http.Handle("/string", String("I'm a frayed knot."))
+	//http.Handle("/struct", Struct{"Hello", ":", "Gophers!"})
+	//log.Fatal(http.ListenAndServe("localhost:4000", nil))
+
+	// ¤¤ Images ¤¤
+	// http://golang.org/pkg/image/#Image
+	// Pour la partie color http://golang.org/pkg/image/color/
+	ima := image.NewRGBA(image.Rect(0, 0, 100, 100))
+	fmt.Println(ima.ColorModel())
+	fmt.Println(ima.Bounds())
+	fmt.Println(ima.At(0, 0).RGBA())
 
 }
